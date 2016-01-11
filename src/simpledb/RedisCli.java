@@ -64,4 +64,8 @@ public class RedisCli {
         }
     }
 
+    public Redis getRedisInstance() {
+        return redis;
+    }
+
 }
