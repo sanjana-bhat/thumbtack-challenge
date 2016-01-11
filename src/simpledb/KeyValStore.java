@@ -8,6 +8,6 @@ public interface KeyValStore {
 
     void unset(String key);
 
-    int numequalto(String value);
+    Integer numequalto(String value);
 
 }

@@ -29,10 +29,12 @@ public class SetCommand implements Command {
             if (oldVal != null && !oldVal.equals(value)) {
                 tempStore.decreaseValueCountBy(oldVal, 1);
             }
-            count += tempStore.numequalto(value);
+            if (tempStore.numequalto(value) != null) {
+                count += tempStore.numequalto(value);
+            }
         }
 
-        if (redisStore.numequalto(value) == 0) {
+        if (redisStore.numequalto(value) != null && redisStore.numequalto(value) == 0) {
             redisStore.increaseValueCountBy(value, count);
         }
         redisStore.set(key, value);

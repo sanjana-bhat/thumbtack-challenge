@@ -18,12 +18,12 @@ public class NumequaltoCommand implements Command {
     @Override
     public void execute() {
         RedisStore redisStore = redis.getRedisStore();
-        int count = redisStore.numequalto(value);
-        if (count == 0) {
+        Integer count = redisStore.numequalto(value);
+        if (count == null) {
             RedisTransaction transaction = redis.getTransaction();
             for (KeyValStore store : transaction) {
                 count = store.numequalto(value);
-                if (count != 0) {
+                if (count != null && count != 0) {
                     break;
                 }
             }

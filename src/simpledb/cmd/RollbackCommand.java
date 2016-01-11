@@ -15,7 +15,7 @@ public class RollbackCommand implements Command {
     public void execute() {
         RedisStore redisStore = (RedisStore) redis.getTransaction().rollback();
         if (redisStore == null) {
-            System.out.println("ROLLBACK not allowed");
+            System.out.println("NO TRANSACTION");
             return;
         }
         redis.setRedisStore(redisStore);

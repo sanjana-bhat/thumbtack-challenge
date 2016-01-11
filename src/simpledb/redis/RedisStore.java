@@ -46,8 +46,8 @@ public class RedisStore implements KeyValStore {
     }
 
     @Override
-    public int numequalto(final String value) {
-        Integer count = 0;
+    public Integer numequalto(final String value) {
+        Integer count = null;
         if (valueCounter.containsKey(value)) {
             count = valueCounter.get(value);
         }

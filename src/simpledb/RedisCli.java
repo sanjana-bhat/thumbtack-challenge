@@ -18,7 +18,7 @@ public class RedisCli {
         String file = null;
         if (args.length > 0) {
             readFromFile = true;
-            file = args[1];
+            file = args[0];
         }
         RedisCli redisCli = new RedisCli();
         if (readFromFile) {
@@ -51,6 +51,7 @@ public class RedisCli {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String cmd;
             while ((cmd = br.readLine()) != null) {
+                System.out.println(cmd);
                 execute(cmd);
             }
         } catch (IOException ioe) {
