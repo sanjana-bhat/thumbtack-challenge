@@ -7,8 +7,12 @@ import java.util.Iterator;
 import simpledb.KeyValStore;
 import simpledb.Transaction;
 
+/**
+ * Transaction operations related to Redis
+ */
 public class RedisTransaction implements Transaction, Iterable<KeyValStore> {
 
+    //An LIFO store to save previous redis states during a new transaction
     private Deque<KeyValStore> savedStates;
 
     public RedisTransaction() {
@@ -31,6 +35,7 @@ public class RedisTransaction implements Transaction, Iterable<KeyValStore> {
             RedisStore state = (RedisStore) savedStates.pollFirst();
             firstState.merge(state);
         }
+        //Clear out all the saved state
         savedStates = new ArrayDeque<>();
         return firstState;
     }

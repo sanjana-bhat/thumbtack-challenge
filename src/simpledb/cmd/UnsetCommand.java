@@ -20,15 +20,28 @@ public class UnsetCommand implements Command {
         RedisStore redisStore = redis.getRedisStore();
         RedisTransaction transaction = redis.getTransaction();
 
+        if (redisStore.isKeyMarkedUnset(key)) {
+            return;
+        }
         String value = redisStore.get(key);
+        int count = 0;
+        //The current redis state doesn't have the key and hence needs to be searched in the saved states
         if (value == null) {
             for (KeyValStore store : transaction) {
                 value = store.get(key);
+                //Once the key is found it's value count is decremented indicating an unset
                 if (value != null) {
-                    redisStore.decreaseValueCountBy(value, 1);
+                    count = store.numequalto(value);
                     break;
                 }
             }
+        }
+        //Update the value count from previous state
+        if (value != null && (redisStore.numequalto(value) == null || redisStore.numequalto(value) == 0)) {
+            redisStore.increaseValueCountBy(value, count);
+        }
+        if (value != null) {
+            redisStore.decreaseValueCountBy(value, 1);
         }
         redisStore.unset(key);
     }

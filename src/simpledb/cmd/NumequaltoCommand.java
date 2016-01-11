@@ -19,14 +19,18 @@ public class NumequaltoCommand implements Command {
     public void execute() {
         RedisStore redisStore = redis.getRedisStore();
         Integer count = redisStore.numequalto(value);
+        //If the value is not present, get it from the previous states
         if (count == null) {
             RedisTransaction transaction = redis.getTransaction();
             for (KeyValStore store : transaction) {
                 count = store.numequalto(value);
-                if (count != null && count != 0) {
+                if (count != null) {
                     break;
                 }
             }
+        }
+        if (count == null) {
+            count = 0;
         }
         System.out.println(count);
     }

@@ -7,21 +7,30 @@ import java.util.Set;
 
 import simpledb.KeyValStore;
 
+/**
+ * For simplicity, this store can only be accessed by one client at a time and is not thread safe. If multiple clients
+ * need to connect to the store, then Concurrent collection libraries need to be used like ConcurrentHashMap Complexity:
+ * All operations take O(1). In JDK 8, HashMap has been tweaked for a worst case complexity of O(logn)
+ */
 public class RedisStore implements KeyValStore {
 
     private Map<String, String> store = new HashMap<>();
     private Map<String, Integer> valueCounter = new HashMap<>();
+    //This set is needed to keep track of keys that have been unset inside a transaction and is used during merge
     private Set<String> unsetKeys = new HashSet<>();
 
     @Override
     public void set(final String key, final String value) {
+        //Decrement the count for the current value
         if (store.containsKey(key)) {
             String oldVal = store.get(key);
             decreaseValueCountBy(oldVal, 1);
         }
+        //If the key was unset prior to this operation, remove from the set
         if (isKeyMarkedUnset(key)) {
             unsetKeys.remove(key);
         }
+        //Increment the count for the new value
         store.put(key, value);
         increaseValueCountBy(value, 1);
     }
@@ -40,6 +49,7 @@ public class RedisStore implements KeyValStore {
         if (!store.containsKey(key)) {
             return;
         }
+        //Decrement the count for the value and remove the key
         final String value = store.get(key);
         decreaseValueCountBy(value, 1);
         store.remove(key);

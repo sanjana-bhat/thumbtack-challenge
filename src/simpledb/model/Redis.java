@@ -3,6 +3,10 @@ package simpledb.model;
 import simpledb.redis.RedisStore;
 import simpledb.redis.RedisTransaction;
 
+/**
+ * This class is composed of RedisStore and RedisTransaction. This class itself is composed within the various Redis
+ * Command classes
+ */
 public class Redis {
 
     private RedisStore redisStore;

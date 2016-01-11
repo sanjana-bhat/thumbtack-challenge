@@ -9,6 +9,9 @@ import simpledb.cmd.Command;
 import simpledb.model.Redis;
 import simpledb.util.CommandUtil;
 
+/**
+ * Redis CLI main that accepts commands from the user and executes the commands.
+ */
 public class RedisCli {
 
     private Redis redis = new Redis();
@@ -37,6 +40,7 @@ public class RedisCli {
         }
     }
 
+    //Accept commands from Std Input
     public void executeCmdsFromStdin() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
@@ -47,6 +51,7 @@ public class RedisCli {
         }
     }
 
+    //Accept commands from a file
     public void executeCmdsFromFile(final String file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String cmd;

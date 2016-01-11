@@ -19,6 +19,7 @@ public class GetCommand implements Command {
     public void execute() {
         RedisStore redisStore = redis.getRedisStore();
         String value = redisStore.get(key);
+        //If the current redis store doesn't have the key, search in the previous states
         if (value == null && !redisStore.isKeyMarkedUnset(key)) {
             RedisTransaction transaction = redis.getTransaction();
             for (KeyValStore store : transaction) {
